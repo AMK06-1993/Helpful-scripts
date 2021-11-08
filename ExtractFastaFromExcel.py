@@ -27,7 +27,7 @@ def excel_to_fasta(path, org_col, sequence_col, sheet, file_name):
     else:
         org_col = list(org_col.split(","))
  #need to merge columns from org_col (if there is more than one)
-     try:
+    try:
         columns = org_col + sequence_col
         excel_df = pd.read_excel(path, sheet_name= sheet, usecols= columns, header = 0)
         excel_df['id'] = '>' + excel_df[org_col].apply(lambda x:'_'.join(x), axis=1)
