@@ -45,6 +45,5 @@ def excel_to_fasta(self, path, org_col, sequence_col, sheet, file_name):
         return file_name + " " + "has been saved in the ""files"" folder"
 
     except (KeyError, ValueError) as error:
-    
-    return "The column names provided must be correct and case sensitive"
+        return "The column names provided must be correct and case sensitive"
         
