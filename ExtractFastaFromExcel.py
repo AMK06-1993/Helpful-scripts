@@ -10,17 +10,16 @@ file_name == chosen name for the fasta file
 
 """
 
-import numpy as np
+import numpy
 import pandas as pd
 import os
-import openpyxl
 
-def excel_to_fasta(path, org_col, sequence_col, sheet, file_name):
+def excel_to_fasta(path,org_col,sequence_col,sheet,file_name):
     path = path
     sequence_col = list(sequence_col.split(",")) #always only one element list
     sheet = sheet
     file_name = file_name
- 
+    seq_path = str(os.path.join(os.path.dirname(os.path.abspath(__file__)),'files'))
 #in case more than one org_col is provided:
     if isinstance(org_col, list):
         org_col = org_col
@@ -34,14 +33,14 @@ def excel_to_fasta(path, org_col, sequence_col, sheet, file_name):
         excel_df['id'] = excel_df['id'].str.replace(" ","")
         id_col = excel_df.pop('id')
         excel_df.insert(0, 'id', id_col)
-        excel_df = excel_df.drop(self.org_col,1)
+        excel_df = excel_df.drop(org_col,1)
 
         #dataframe to array
-        numpy_array = excel_df.to_numpy()
+        array = excel_df.to_numpy()
         file_name = file_name + '.txt'
 
         #save file as txt
-        np.savetxt(fname = str(os.path.join(seq_path, file_name)), X = numpy_array, delimiter = ' ', fmt='%s')
+        numpy.savetxt(fname = str(os.path.join(seq_path, file_name)), X = array, delimiter = ' ', fmt='%s')
         return file_name + " " + "has been saved in the ""files"" folder"
 
     except (KeyError, ValueError) as error:
