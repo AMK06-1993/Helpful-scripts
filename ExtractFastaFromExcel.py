@@ -19,7 +19,7 @@ def excel_to_fasta(path,org_col,sequence_col,sheet,file_name):
     sequence_col = list(sequence_col.split(",")) #always only one element list
     sheet = sheet
     file_name = file_name
-    seq_path = str(os.path.join(os.path.dirname(os.path.abspath(__file__)),'files'))
+    seq_path = str(os.path.dirname(os.path.abspath(__file__)))
 #in case more than one org_col is provided:
     if isinstance(org_col, list):
         org_col = org_col
