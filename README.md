@@ -1,1 +1,1 @@
-Just a bunch of functions in python that maybe someone will find useful
+Just a bunch of useful python functions
