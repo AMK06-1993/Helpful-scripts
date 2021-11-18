@@ -16,6 +16,7 @@ import os
 
 #excel file(xls, xlsx, xlsm, xlsb, odf, ods,odt) to fasta
     def excel_to_fasta(path, org_col, sequence_col, sheet, file_name):
+        seq_path = str(Path.home()) + str('/results')
         path = path
         sequence_col = list(sequence_col.split(",")) #always only one element list
         sheet = sheet
