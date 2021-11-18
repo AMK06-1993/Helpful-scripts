@@ -13,6 +13,7 @@ file_name == chosen name for the fasta file
 import numpy
 import pandas as pd
 import os
+from pathlib import Path
 
 #excel file(xls, xlsx, xlsm, xlsb, odf, ods,odt) to fasta
     def excel_to_fasta(path, org_col, sequence_col, sheet, file_name):
