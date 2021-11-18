@@ -2,8 +2,8 @@
 Excel file to fasta.txt file conversion
 
 Following excel formats are acceptable: xls, xlsx, xlsm, xlsb, odf, ods,odt
-path == A full path to the excel file
-org_col == name of columns (in a list [] format or string if only one column present) containing the organism info (Genus, Species etc.)
+path == A full (absolute) path to the excel file
+org_col == name of columns (a list [] of strings or one string if only one column present) containing the organism info (Genus, Species etc.)
 sequence_col == a name of a column (as a string) containing the sequence
 sheet == name of the excel sheet
 file_name == chosen name for the fasta file
