@@ -14,35 +14,42 @@ import numpy
 import pandas as pd
 import os
 
-def excel_to_fasta(path,org_col,sequence_col,sheet,file_name):
-    path = path
-    sequence_col = list(sequence_col.split(",")) #always only one element list
-    sheet = sheet
-    file_name = file_name
-    seq_path = str(os.path.dirname(os.path.abspath(__file__)))
-#in case more than one org_col is provided:
-    if isinstance(org_col, list):
-        org_col = org_col
-    else:
-        org_col = list(org_col.split(","))
- #need to merge columns from org_col (if there is more than one)
-    try:
-        columns = org_col + sequence_col
-        excel_df = pd.read_excel(path, sheet_name= sheet, usecols= columns, header = 0)
-        excel_df['id'] = '>' + excel_df[org_col].apply(lambda x:'_'.join(x), axis=1)
-        excel_df['id'] = excel_df['id'].str.replace(" ","")
-        id_col = excel_df.pop('id')
-        excel_df.insert(0, 'id', id_col)
-        excel_df = excel_df.drop(org_col,1)
-
-        #dataframe to array
-        array = excel_df.to_numpy()
-        file_name = file_name + '.txt'
-
-        #save file as txt
-        numpy.savetxt(fname = str(os.path.join(seq_path, file_name)), X = array, delimiter = ' ', fmt='%s')
-        return file_name + " " + "has been saved in the ""files"" folder"
-
-    except (KeyError, ValueError) as error:
-        return "The column names provided must be correct and case sensitive"
+#excel file(xls, xlsx, xlsm, xlsb, odf, ods,odt) to fasta
+    def excel_to_fasta(path, org_col, sequence_col, sheet, file_name):
+        path = path
+        sequence_col = list(sequence_col.split(",")) #always only one element list
+        sheet = sheet
+        file_name = file_name
+        if isinstance(org_col, list):
+            org_col = (org_col)
+        else:
+            org_col = (list(org_col.split(",")))
         
+        
+    #we need to merge columns from org_col (if there is more than one)
+        try:
+                columns = org_col + sequence_col
+                excel_df = pd.read_excel(path, sheet_name= sheet, usecols= columns, header = 0)
+                excel_df['id'] = '>' + excel_df[org_col].apply(lambda x:'_'.join(x), axis=1) + '\n'
+                excel_df['id'] = excel_df['id'].str.replace(" ","")
+                id_col = excel_df.pop('id')
+                excel_df.insert(0, 'id', id_col)
+                excel_df = excel_df.drop(labels = org_col, axis = 'columns')
+                
+                #dataframe to array
+                numpy_array = excel_df.to_numpy()
+                file_name = file_name + '.fa'
+                results_path= str(os.path.join(seq_path, file_name))
+                
+                #save file as txt
+                np.savetxt(fname = results_path, X = numpy_array, delimiter = ' ', fmt='%s')
+                return print(file_name + " " + "has been saved in" + " " + results_path)
+
+        except (KeyError, ValueError):
+            print("The column names provided must be correct and case sensitive")
+            sys.exit(0)
+        except Exception as e:
+            print(e)
+
+
+
