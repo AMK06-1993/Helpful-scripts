@@ -46,6 +46,8 @@ while resp_dict['next'] is not None:
         df.loc[counter, "description"] = resp_dict["results"][i]["cog"]["funcats"][0].get('description')
         counter+=1
        
+df.to_csv(path)
+
 
 
 
