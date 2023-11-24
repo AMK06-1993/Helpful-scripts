@@ -1,0 +1,28 @@
+# Define the output directory for merged files
+output_dir=""
+
+# Create the output directory if it does not exist
+mkdir -p "$output_dir"
+
+# Find all sample identifiers (e.g., GC125610, GC125611, etc.)
+samples=$(ls *fastq.gz | awk -F '_' '{print $1}' | sort | uniq)
+
+for sample in $samples; do
+    # Define the full paths for the merged files for this sample
+    merged_R1="${output_dir}/${sample}_R1_all.fastq.gz"
+    merged_R2="${output_dir}/${sample}_R2_all.fastq.gz"
+
+    # Ensure we start with a fresh merged file for this sample
+    rm -f "$merged_R1"
+    rm -f "$merged_R2"
+
+    # Concatenate all R1 files for this sample into the merged R1 file
+    # If $merged_R1 doesn't exist, it will be created
+    cat ${sample}_*_R1_*.fastq.gz >> "$merged_R1"
+
+    # Concatenate all R2 files for this sample into the merged R2 file
+    # If $merged_R2 doesn't exist, it will be created
+    cat ${sample}_*_R2_*.fastq.gz >> "$merged_R2"
+done
+
+echo "Merging complete for all samples."
