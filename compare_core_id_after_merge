@@ -1,0 +1,38 @@
+#Check if core identifiers in in .R1 and .R2 fastq files match = The reads are in the same order i.e. after merging
+
+#!/bin/bash -l
+
+# Directory containing the FASTQ files
+fastq_dir=""
+
+# Change to the directory with FASTQ files
+cd "$fastq_dir"
+
+# Loop through R1 files
+for r1_file in *_R1_*.fastq.gz; do
+    # Corresponding R2 file
+    r2_file="${r1_file/_R1_/_R2_}"
+
+    # Extract the sample name from the R1 filename
+    sample_name=$(echo "$r1_file" | awk -F '_R1_' '{print $1}')
+    echo "Processing sample: $sample_name"
+
+    # Check if the R2 file exists
+    if [[ -f "$r2_file" ]]; then
+        # Extract core identifiers from R1 and R2 files
+        zcat "$r1_file" | awk 'NR%4==1' | cut -d ' ' -f 1 > headers_R1.txt
+        zcat "$r2_file" | awk 'NR%4==1' | cut -d ' ' -f 1 > headers_R2.txt
+
+        # Compare the headers
+        if cmp -s headers_R1.txt headers_R2.txt; then
+            echo "Headers are in the same order for $sample_name."
+        else
+            echo "Headers are NOT in the same order for $sample_name."
+        fi
+
+        # Cleanup
+        rm headers_R1.txt headers_R2.txt
+    else
+        echo "Matching R2 file not found for $sample_name."
+    fi
+done
