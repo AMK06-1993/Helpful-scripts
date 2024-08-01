@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# Check if the input file is provided as an argument
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $0 <input_fasta_file>"
+  exit 1
+fi
+
+# Input file from positional argument
+input_file="$1"
+
+# Prompt user for the type of plastic
+read -p "Enter the type of plastic: " plastic
+
+# Check if the input file exists
+if [[ ! -f "$input_file" ]]; then
+  echo "Error: Input file '$input_file' not found!"
+  exit 1
+fi
+
+# Read the input file and split it into individual FASTA files
+awk -v plastic="$plastic" '
+  BEGIN { count=0 }
+  /^>/ {
+    if (seq) {
+      count++
+      output_file=plastic "_" taxa "_" gene "_" count ".fasta"
+      print header > output_file
+      print seq > output_file
+    }
+    header=$0
+    seq=""
+    split($0, parts, "\\|\\|")
+    taxa=parts[3]
+    gsub(" ", "_", taxa)
+    gene=parts[2]
+    gsub(" ", "_", gene)
+  }
+  /^[^>]/ {
+    seq = seq $0 "\n"
+  }
+  END {
+    if (seq) {
+      count++
+      output_file=plastic "_" taxa "_" gene "_" count ".fasta"
+      print header > output_file
+      print seq > output_file
+    }
+  }
+' "$input_file"
+
+echo "Splitting complete. Output files are named as <Plastic>_<Taxa>_<Gene>_<Number>.fasta."
+
